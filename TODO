@@ -1,0 +1,35 @@
+Escolher linguagens:
+    - Fastapi (backend) [OK]
+    - React (frontend) [OK]
+
+Funcionalidades:
+    - Grafos Direcionados
+    - Grafos não direcionados
+    - Com sentido ou não
+    - Valorados e não valorados
+    - Inserir um item de cada vez (Vertices e Arestas)
+    - Inserir informações em lotes
+        - Arquivos .csv
+        - Strings
+    - Visualizar o grafo
+        - Matriz de adjacência
+        - Lista de adjacência
+        - Matriz de incidência
+        - Visualização gráfica (Opcional)
+        - Download de imagem (Opcional)
+    - Obter informações
+        - Ordem
+        - Grau
+    - Dado um vértice
+        - Lista de vertices adjacentes
+        - Se direcionado:
+            - Informar a lista de vértices adjacentes de entrada
+            - Informar a lista de vértices adjacentes de saída
+        - Informar grau daquele vertice
+        - Se direcionado:
+            - Informar grau de adjacência de entrada
+            - Informar grau de adjacência de saída
+    - Dado um par de vertices
+        - Informar se os dois vertices são adjacentes ou não
+    - Requisito surpresa (48horas antes)
+        - ?
