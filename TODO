@@ -1,25 +1,29 @@
 Escolher linguagens:
     - Fastapi (backend) [OK]
     - React (frontend) [OK]
+    - Lib para grafos (networkx) [OK]
+    - Config DB (sqlite) [DOING]
 
 Funcionalidades:
     - Grafos Direcionados
     - Grafos não direcionados
     - Com sentido ou não
     - Valorados e não valorados
-    - Inserir um item de cada vez (Vertices e Arestas)
-    - Inserir informações em lotes
-        - Arquivos .csv
-        - Strings
+    - Entrada
+        - Definir padrão de entrada [DONE]
+        - Inserir um item de cada vez (Vertices e Arestas) [DOING]
+        - Inserir informações em lotes [DONE]
+            - Arquivos .csv [DONE]
+            - Strings [DONE]
     - Visualizar o grafo
         - Matriz de adjacência
         - Lista de adjacência
         - Matriz de incidência
-        - Visualização gráfica (Opcional)
-        - Download de imagem (Opcional)
+        - Visualização gráfica (Opcional) [DONE]
+        - Download de imagem (Opcional) [DONE]
     - Obter informações
-        - Ordem
-        - Grau
+        - Ordem [DONE]
+        - Grau [DONE]
     - Dado um vértice
         - Lista de vertices adjacentes
         - Se direcionado:
