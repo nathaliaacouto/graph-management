@@ -16,5 +16,5 @@ This is a project focused on drawing and managing graphs
 ```bash
     # Workflow
     source .venv/bin/activate
-    fastapi dev main.py
+    fastapi dev main.py --reload
 ```
