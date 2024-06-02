@@ -6,10 +6,10 @@ Escolher linguagens:
     - Config DB (sqlite) [OK]
 
 Funcionalidades:
-    - Grafos Direcionados
+    - Grafos Direcionados [DONE]
     - Grafos não direcionados [DONE]
-    - Com sentido ou não
-    - Valorados e não valorados
+    - Com sentido ou não [DONE]
+    - Valorados e não valorados 
     - Entrada
         - Definir padrão de entrada [DONE]
         - Inserir um item de cada vez (Vertices e Arestas) [DONE]
@@ -18,8 +18,8 @@ Funcionalidades:
             - Strings [DONE]
     - Visualizar o grafo
         - Matriz de adjacência [DONE]
-        - Lista de adjacência
-        - Matriz de incidência
+        - Lista de adjacência (Opcional)
+        - Matriz de incidência (Opcional)
         - Visualização gráfica (Opcional) [DONE]
         - Download de imagem (Opcional) [DONE]
     - Obter informações
@@ -28,7 +28,7 @@ Funcionalidades:
     - Dado um vértice
         - Lista de vertices adjacentes
         - Se direcionado:
-            - Informar a lista de vértices adjacentes de entrada
+            - Informar a lista de vértices adjacentes de entrada+
             - Informar a lista de vértices adjacentes de saída
         - Informar grau daquele vertice
         - Se direcionado:
@@ -39,5 +39,12 @@ Funcionalidades:
     - Dado um vértice retornar qual a excentricidade do vértice
     - Dado um vértice retornar se o vértice é pendente ou não.
     - Dado um grafo retornar o Raio e o Diâmetro do Grafo.
-    - Requisito surpresa (48horas antes)
-        - ?
+    - Requisito surpresa 
+        - Dado um grafo o sistema deverá informar se o grafo é euleriano ou não
+        - E se o grafo é semi-euleriano ou não.
+
+nx.is_eulerian(G)
+nx.is_semieulerian(G)
+dict(nx.eccentricity(k5))
+nx.radius(k5)
+nx.diameter(k5)

@@ -45,12 +45,13 @@ async def read_graph_csv_by_file(file):
     source_column = first_three_columns[0]
     target_column = first_three_columns[1]
     if len(first_three_columns) == 3:
-        edge_attr = first_three_columns[2]
+        edge_key = first_three_columns[2]
     else:
-        edge_attr = None
+        edge_key = None
 
     # Criação do grafo utilizando NetworkX
-    G = nx.from_pandas_edgelist(df, source=source_column, target=target_column, edge_attr=edge_attr)
+    G = nx.from_pandas_edgelist(df, source=source_column, target=target_column,
+                                strength=edge_key)
     return G, convert_graph_to_json(G)
 
 
@@ -64,17 +65,21 @@ async def read_graph_csv_by_string(csv_str):
     first_three_columns = df.columns[:3]
     source_column = first_three_columns[0]
     target_column = first_three_columns[1]
-    if len(first_three_columns) == 3:
-        edge_attr = first_three_columns[2]
-    else:
-        edge_attr = None
+    weight_column = first_three_columns[2] if len(
+        first_three_columns) == 3 else None
+
+    if weight_column is not None:
+        # trocar nome da coluna para 'weight'
+        df.rename(columns={weight_column: 'weight'}, inplace=True)
+        weight_column = 'weight'
 
     # Criação do grafo utilizando NetworkX
-    G = nx.from_pandas_edgelist(df, source=source_column, target=target_column, edge_attr=edge_attr)
+    G = nx.from_pandas_edgelist(
+        df, source=source_column, target=target_column, edge_attr=weight_column)
     return G, convert_graph_to_json(G)
 
 
-def generate_image_from_graph(graph, filename='graph.png'):
+def generate_image_from_graph(graph, directed, filename='graph.png'):
     """
     Generate and save a PNG image from a graph, and return the absolute path of the saved image.
 
@@ -86,13 +91,38 @@ def generate_image_from_graph(graph, filename='graph.png'):
     - abs_path: The absolute path of the saved image file.
     """
     plt.figure(figsize=(12, 8))
-    nx.draw_networkx(graph, with_labels=True)
+    pos = nx.spring_layout(graph)
+    if directed:
+        options = {
+            'width': 3,
+            'arrowstyle': '-|>',
+            'arrowsize': 25,
+            'arrows': True,
+        }
+        nx.draw_networkx_nodes(graph, pos)
+        nx.draw_networkx_labels(graph, pos)
+        nx.draw_networkx_edges(graph, pos, edge_color='gray',
+                               **options)
+        nx.draw_networkx_edge_labels(
+            graph, pos, edge_labels=nx.get_edge_attributes(graph, 'weight'))
+    else:
+        options = {
+            'width': 3,
+        }
+        nx.draw_networkx_nodes(graph, pos)
+        nx.draw_networkx_labels(graph, pos)
+        nx.draw_networkx_edges(graph, pos, edge_color='gray',
+                               **options)
+        nx.draw_networkx_edge_labels(
+            graph, pos, edge_labels=nx.get_edge_attributes(graph, 'weight'))
+
     plt.savefig(filename, format='png')
     plt.close()  # Fecha a figura para liberar memória
 
     # Obter o caminho absoluto do arquivo salvo
     abs_path = os.path.abspath(filename)
     return abs_path
+
 
 def generate_adjacency_matrix(graph):
     """

@@ -17,14 +17,15 @@ def read_root():
 
 
 @app.post("/create-graph/")
-async def create_graph_api(csv_str: Annotated[str, Form(...)] = None, file: UploadFile = File(None), db: Session = Depends(get_db)):
+async def create_graph_api(csv_str: Annotated[str, Form(...)] = None, file: UploadFile = File(None), directed: Annotated[bool, Form(...)] = False, db: Session = Depends(get_db)):
     graphs = None
     if csv_str:
         _, graphs = await functions.read_graph_csv_by_string(csv_str)
     if file:
         _, graphs = await functions.read_graph_csv_by_file(file)
     if graphs is not None:
-        graph_object = GraphRepository.save(db, Graph(graph=graphs))
+        graph_object = GraphRepository.save(
+            db, Graph(graph=graphs, directed=directed))
         return {"message": "Graph created successfully!", "id": graph_object.id}
     return {"message": "Graph not created!"}
 
@@ -38,12 +39,15 @@ def get_graph_api(id: int, db: Session = Depends(get_db)):
 
 
 @app.put("/add-edge/")
-def add_edge_api(id: int, source: str = Form(...), target: str = Form(...), db: Session = Depends(get_db)):
+def add_edge_api(id: int, source: str = Form(...), target: str = Form(...), weight: Annotated[int, Form(...)] = None, db: Session = Depends(get_db)):
     graph = GraphRepository.find_by_id(db, id)
     if graph is not None:
         # graph.graph.add_edge(source, target)
         graph_object = functions.convert_json_to_graph(graph.graph)
-        graph_object.add_edge(source, target)
+        if weight:
+            graph_object.add_edge(source, target, weight=weight)
+        else:
+            graph_object.add_edge(source, target)
 
         json_graph = functions.convert_graph_to_json(graph_object)
         graph.graph = json_graph
@@ -65,6 +69,25 @@ def add_node_api(id: int, node: str = Form(...), db: Session = Depends(get_db)):
         return {"message": "Node added successfully!"}
     return {"message": "Graph not found!"}
 
+
+@app.get("/get-order/")
+def get_order_api(id: int, db: Session = Depends(get_db)):
+    graph = GraphRepository.find_by_id(db, id)
+    if graph is not None:
+        graph_object = functions.convert_json_to_graph(graph.graph)
+        return {"message": "Order retrieved successfully!", "order": graph_object.order()}
+    return {"message": "Graph not found!"}
+
+
+@app.get("/get-degree/")
+def get_degree_api(id: int, db: Session = Depends(get_db)):
+    graph = GraphRepository.find_by_id(db, id)
+    if graph is not None:
+        graph_object = functions.convert_json_to_graph(graph.graph)
+        return {"message": "Degree retrieved successfully!", "degree": dict(graph_object.degree)}
+    return {"message": "Graph not found!"}
+
+
 @app.get("/adjacency-matrix/")
 def adjacency_matrix_api(id: int, db: Session = Depends(get_db)):
     graph = GraphRepository.find_by_id(db, id)
@@ -74,13 +97,15 @@ def adjacency_matrix_api(id: int, db: Session = Depends(get_db)):
         return {"message": "Adjacency matrix generated successfully!", "result": matrix}
     return {"message": "Graph not found!"}
 
+
 @app.get("/get-image-graph/")
 def get_image_graph_api(id: int, db: Session = Depends(get_db)):
     graph = GraphRepository.find_by_id(db, id)
     if graph is not None:
         graph_object = functions.convert_json_to_graph(graph.graph)
+        directed = graph.directed
         image_path = functions.generate_image_from_graph(
-            graph_object, 'graph.png')
+            graph_object, directed, 'graph.png')
         return {"message": "Image generated successfully!", "image": image_path}
     return {"message": "Graph not found!"}
 
