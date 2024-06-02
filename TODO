@@ -9,14 +9,14 @@ Funcionalidades:
     - Grafos Direcionados [DONE]
     - Grafos não direcionados [DONE]
     - Com sentido ou não [DONE]
-    - Valorados e não valorados 
-    - Entrada
+    - Valorados e não valorados [DONE]
+    - Entrada [DONE]
         - Definir padrão de entrada [DONE]
         - Inserir um item de cada vez (Vertices e Arestas) [DONE]
         - Inserir informações em lotes [DONE]
             - Arquivos .csv [DONE]
             - Strings [DONE]
-    - Visualizar o grafo
+    - Visualizar o grafo [DONE]
         - Matriz de adjacência [DONE]
         - Lista de adjacência (Opcional)
         - Matriz de incidência (Opcional)
@@ -28,7 +28,7 @@ Funcionalidades:
     - Dado um vértice
         - Lista de vertices adjacentes
         - Se direcionado:
-            - Informar a lista de vértices adjacentes de entrada+
+            - Informar a lista de vértices adjacentes de entrada
             - Informar a lista de vértices adjacentes de saída
         - Informar grau daquele vertice
         - Se direcionado:
