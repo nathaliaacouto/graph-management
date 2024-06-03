@@ -20,9 +20,9 @@ def read_root():
 async def create_graph_api(csv_str: Annotated[str, Form(...)] = None, file: UploadFile = File(None), directed: Annotated[bool, Form(...)] = False, db: Session = Depends(get_db)):
     graphs = None
     if csv_str:
-        _, graphs = await functions.read_graph_csv_by_string(csv_str)
+        _, graphs = await functions.read_graph_csv_by_string(csv_str, directed=directed)
     if file:
-        _, graphs = await functions.read_graph_csv_by_file(file)
+        _, graphs = await functions.read_graph_csv_by_file(file, directed=directed)
     if graphs is not None:
         graph_object = GraphRepository.save(
             db, Graph(graph=graphs, directed=directed))
@@ -85,6 +85,39 @@ def get_degree_api(id: int, db: Session = Depends(get_db)):
     if graph is not None:
         graph_object = functions.convert_json_to_graph(graph.graph)
         return {"message": "Degree retrieved successfully!", "degree": dict(graph_object.degree)}
+    return {"message": "Graph not found!"}
+
+
+@app.get("/get-adjacent-edges/")
+def get_adjacent_edges_api(id: int, node: str = Form(...), db: Session = Depends(get_db)):
+    graph = GraphRepository.find_by_id(db, id)
+    if graph is not None:
+        graph_object = functions.convert_json_to_graph(graph.graph)
+        if functions.exists_node(graph_object, node):
+            return {"message": "Adjacent edges retrieved successfully!", "edges": functions.get_adjacent_edges(graph_object, node, directed=graph.directed)}
+        return {"message": "Node not found!"}
+    return {"message": "Graph not found!"}
+
+
+@app.get("/get-adjacent-degree/")
+def get_adjacent_degree_api(id: int, node: str = Form(...), db: Session = Depends(get_db)):
+    graph = GraphRepository.find_by_id(db, id)
+    if graph is not None:
+        graph_object = functions.convert_json_to_graph(graph.graph)
+        if functions.exists_node(graph_object, node):
+            return {"message": "Adjacent edges with degree retrieved successfully!", "edges": functions.get_adjacent_degree(graph_object, node, directed=graph.directed)}
+        return {"message": "Node not found!"}
+    return {"message": "Graph not found!"}
+
+
+@app.get("/get-has-edge/")
+def get_has_edge_api(id: int, source: str = Form(...), target: str = Form(...), db: Session = Depends(get_db)):
+    graph = GraphRepository.find_by_id(db, id)
+    if graph is not None:
+        graph_object = functions.convert_json_to_graph(graph.graph)
+        if functions.exists_node(graph_object, source) and functions.exists_node(graph_object, target):
+            return {"message": "Edge found successfully!", "exists": functions.get_has_edge(graph_object, source, target)}
+        return {"message": "Some node not found!"}
     return {"message": "Graph not found!"}
 
 

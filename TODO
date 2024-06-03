@@ -25,17 +25,17 @@ Funcionalidades:
     - Obter informações
         - Ordem [DONE]
         - Grau [DONE]
-    - Dado um vértice
-        - Lista de vertices adjacentes
+    - Dado um vértice[DONE]
+        - Lista de vertices adjacentes [DONE]
         - Se direcionado:
-            - Informar a lista de vértices adjacentes de entrada
-            - Informar a lista de vértices adjacentes de saída
-        - Informar grau daquele vertice
+            - Informar a lista de vértices adjacentes de entrada [DONE]
+            - Informar a lista de vértices adjacentes de saída [DONE]
+        - Informar grau daquele vertice [DONE]
         - Se direcionado:
-            - Informar grau de adjacência de entrada
-            - Informar grau de adjacência de saída
+            - Informar grau de adjacência de entrada [DONE]
+            - Informar grau de adjacência de saída [DONE]
     - Dado um par de vertices
-        - Informar se os dois vertices são adjacentes ou não
+        - Informar se os dois vertices são adjacentes ou não [DONE]
     - Dado um vértice retornar qual a excentricidade do vértice
     - Dado um vértice retornar se o vértice é pendente ou não.
     - Dado um grafo retornar o Raio e o Diâmetro do Grafo.

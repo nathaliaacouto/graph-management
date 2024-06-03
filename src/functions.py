@@ -32,7 +32,7 @@ def convert_json_to_graph(json_g):
     return json_graph.node_link_graph(json_g)
 
 
-async def read_graph_csv_by_file(file):
+async def read_graph_csv_by_file(file, directed=False):
     # Leitura do conteúdo do arquivo CSV enviado
     content = await file.read()
     # Decodificação do conteúdo para string
@@ -44,18 +44,26 @@ async def read_graph_csv_by_file(file):
     first_three_columns = df.columns[:3]
     source_column = first_three_columns[0]
     target_column = first_three_columns[1]
-    if len(first_three_columns) == 3:
-        edge_key = first_three_columns[2]
-    else:
-        edge_key = None
+    weight_column = first_three_columns[2] if len(
+        first_three_columns) == 3 else None
 
-    # Criação do grafo utilizando NetworkX
-    G = nx.from_pandas_edgelist(df, source=source_column, target=target_column,
-                                strength=edge_key)
+    if weight_column is not None:
+        # trocar nome da coluna para 'weight'
+        df.rename(columns={weight_column: 'weight'}, inplace=True)
+        weight_column = 'weight'
+
+    if directed:
+        # Criação do grafo utilizando NetworkX
+        G = nx.from_pandas_edgelist(
+            df, source=source_column, target=target_column, edge_attr=weight_column, create_using=nx.DiGraph)
+    else:
+        # Criação do grafo utilizando NetworkX
+        G = nx.from_pandas_edgelist(
+            df, source=source_column, target=target_column, edge_attr=weight_column)
     return G, convert_graph_to_json(G)
 
 
-async def read_graph_csv_by_string(csv_str):
+async def read_graph_csv_by_string(csv_str, directed=False):
     """
     Read graph from csv string
     """
@@ -73,11 +81,131 @@ async def read_graph_csv_by_string(csv_str):
         df.rename(columns={weight_column: 'weight'}, inplace=True)
         weight_column = 'weight'
 
-    # Criação do grafo utilizando NetworkX
-    G = nx.from_pandas_edgelist(
-        df, source=source_column, target=target_column, edge_attr=weight_column)
+    if directed:
+        # Criação do grafo utilizando NetworkX
+        G = nx.from_pandas_edgelist(
+            df, source=source_column, target=target_column, edge_attr=weight_column, create_using=nx.DiGraph)
+    else:
+        # Criação do grafo utilizando NetworkX
+        G = nx.from_pandas_edgelist(
+            df, source=source_column, target=target_column, edge_attr=weight_column)
     return G, convert_graph_to_json(G)
 
+
+def exists_edge(graph, source, target):
+    """
+    Check if an edge exists in a graph.
+
+    Parameters:
+    - graph: The NetworkX graph.
+    - source: The source node.
+    - target: The target node.
+
+    Returns:
+    - exists: True if the edge exists, False otherwise.
+    """
+    return graph.has_edge(source, target)
+
+
+def exists_node(graph, node):
+    """
+    Check if a node exists in a graph.
+
+    Parameters:
+    - graph: The NetworkX graph.
+    - node: The node to be checked.
+
+    Returns:
+    - exists: True if the node exists, False otherwise.
+    """
+    return graph.has_node(node)
+
+
+def get_incoming_edges(graph, node):
+    """
+    Get the incoming edges of a node in a graph.
+
+    Parameters:
+    - graph: The NetworkX graph.
+    - node: The node to get the incoming edges.
+
+    Returns:
+    - edges: The incoming edges of the node.
+    """
+    return list(graph.in_edges(node, data=True))
+
+
+def get_outgoing_edges(graph, node):
+    """
+    Get the outgoing edges of a node in a graph.
+
+    Parameters:
+    - graph: The NetworkX graph.
+    - node: The node to get the outgoing edges.
+
+    Returns:
+    - edges: The outgoing edges of the node.
+    """
+    return list(graph.out_edges(node, data=True))
+
+
+def get_adjacent_edges(graph, node, directed=False):
+    """
+    Get the adjacent edges of a node in a graph.
+
+    Parameters:
+    - graph: The NetworkX graph.
+    - node: The node to get the adjacent edges.
+
+    Returns:
+    - edges: The adjacent edges of the node.
+    """
+    if not directed:
+        return list(graph.edges(node, data=True))
+
+    incoming_edges = get_incoming_edges(graph, node)
+    outgoing_edges = get_outgoing_edges(graph, node)
+
+    return {
+        "incoming": incoming_edges,
+        "outgoing": outgoing_edges
+    }
+
+def get_adjacent_degree(graph, node, directed=False):
+    """
+    Get the adjacent degree of a node in a graph.
+
+    Parameters:
+    - graph: The NetworkX graph.
+    - node: The node to get the adjacent degree.
+
+    Returns:
+    - degree: The adjacent degree of the node.
+    """
+    if not directed:
+        return graph.degree(node)
+
+    incoming_degree = len(get_incoming_edges(graph, node))
+    outgoing_degree = len(get_outgoing_edges(graph, node))
+
+    return {
+        "incoming": incoming_degree,
+        "outgoing": outgoing_degree
+    }
+
+def get_has_edge(graph, source, target):
+    """
+    Get the weight of an edge in a graph.
+
+    Parameters:
+    - graph: The NetworkX graph.
+    - source: The source node.
+    - target: The target node.
+
+    Returns:
+    - weight: The weight of the edge.
+    """
+    return graph.has_edge(source, target)
 
 def generate_image_from_graph(graph, directed, filename='graph.png'):
     """
