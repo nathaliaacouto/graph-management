@@ -121,6 +121,46 @@ def get_has_edge_api(id: int, source: str = Form(...), target: str = Form(...), 
     return {"message": "Graph not found!"}
 
 
+@app.get("/get-shortest-path/")
+def get_shortest_path_api(id: int, source: str = Form(...), target: str = Form(...), db: Session = Depends(get_db)):
+    graph = GraphRepository.find_by_id(db, id)
+    if graph is not None:
+        graph_object = functions.convert_json_to_graph(graph.graph)
+        if functions.exists_node(graph_object, source) and functions.exists_node(graph_object, target):
+            return {"result": functions.get_shortest_path(graph_object, source, target)}
+        return {"message": "Some node not found!"}
+    return {"message": "Graph not found!"}
+
+
+@app.get("/get-eccentricity-node/")
+def get_eccentricity_node_api(id: int, node: str = Form(...), db: Session = Depends(get_db)):
+    graph = GraphRepository.find_by_id(db, id)
+    if graph is not None:
+        graph_object = functions.convert_json_to_graph(graph.graph)
+        if functions.exists_node(graph_object, node):
+            return {"message": "Eccentricity node retrieved successfully!", "eccentricity": functions.get_eccentricity_node(graph_object, node)}
+        return {"message": "Node not found!"}
+    return {"message": "Graph not found!"}
+
+
+@app.get("/is-eulerian/")
+def is_eulerian_api(id: int, db: Session = Depends(get_db)):
+    graph = GraphRepository.find_by_id(db, id)
+    if graph is not None:
+        graph_object = functions.convert_json_to_graph(graph.graph)
+        return {"message": "Eulerian graph retrieved successfully!", "is_eulerian": functions.is_eulerian(graph_object)}
+    return {"message": "Graph not found!"}
+
+
+@app.get("/is-semi-eulerian/")
+def is_semi_eulerian_api(id: int, db: Session = Depends(get_db)):
+    graph = GraphRepository.find_by_id(db, id)
+    if graph is not None:
+        graph_object = functions.convert_json_to_graph(graph.graph)
+        return {"message": "Semi-Eulerian graph retrieved successfully!", "is_semi_eulerian": functions.is_semi_eulerian(graph_object)}
+    return {"message": "Graph not found!"}
+
+
 @app.get("/adjacency-matrix/")
 def adjacency_matrix_api(id: int, db: Session = Depends(get_db)):
     graph = GraphRepository.find_by_id(db, id)
@@ -128,6 +168,24 @@ def adjacency_matrix_api(id: int, db: Session = Depends(get_db)):
         graph_object = functions.convert_json_to_graph(graph.graph)
         matrix = functions.generate_adjacency_matrix(graph_object)
         return {"message": "Adjacency matrix generated successfully!", "result": matrix}
+    return {"message": "Graph not found!"}
+
+
+@app.get("/get-radius/")
+def get_radius_api(id: int, db: Session = Depends(get_db)):
+    graph = GraphRepository.find_by_id(db, id)
+    if graph is not None:
+        graph_object = functions.convert_json_to_graph(graph.graph)
+        return {"message": "Radius retrieved successfully!", "radius": functions.get_radius(graph_object)}
+    return {"message": "Graph not found!"}
+
+
+@app.get("/get-diameter/")
+def get_diameter_api(id: int, db: Session = Depends(get_db)):
+    graph = GraphRepository.find_by_id(db, id)
+    if graph is not None:
+        graph_object = functions.convert_json_to_graph(graph.graph)
+        return {"message": "Diameter retrieved successfully!", "diameter": functions.get_diameter(graph_object)}
     return {"message": "Graph not found!"}
 
 

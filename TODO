@@ -36,15 +36,13 @@ Funcionalidades:
             - Informar grau de adjacência de saída [DONE]
     - Dado um par de vertices
         - Informar se os dois vertices são adjacentes ou não [DONE]
-    - Dado um vértice retornar qual a excentricidade do vértice
-    - Dado um vértice retornar se o vértice é pendente ou não.
-    - Dado um grafo retornar o Raio e o Diâmetro do Grafo.
-    - Requisito surpresa 
-        - Dado um grafo o sistema deverá informar se o grafo é euleriano ou não
-        - E se o grafo é semi-euleriano ou não.
-
-nx.is_eulerian(G)
-nx.is_semieulerian(G)
-dict(nx.eccentricity(k5))
-nx.radius(k5)
-nx.diameter(k5)
+        - O sistema deverá retornar a informação do caminho mais curto entre eles, [DONE]
+            - tanto o valor do custo do menor caminho entre os dois vértices (1 pt) [DONE]
+            - como a sequência de vértices deste menor caminho entre eles (0,5 pts). [DONE]
+        (Pode-se considerar que os pesos das arestas são sempre números positivos (não há arestas com pesos negativos)).
+    - Dado um vértice retornar qual a excentricidade do vértice [DONE]
+    - Dado um vértice retornar se o vértice é pendente ou não. [DOING]
+    - Dado um grafo retornar o Raio e o Diâmetro do Grafo. [DONE]
+    - Requisito surpresa [DONE]
+        - Dado um grafo o sistema deverá informar se o grafo é euleriano ou não [DONE]
+        - E se o grafo é semi-euleriano ou não. [DONE]

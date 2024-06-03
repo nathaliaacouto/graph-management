@@ -171,6 +171,7 @@ def get_adjacent_edges(graph, node, directed=False):
         "outgoing": outgoing_edges
     }
 
+
 def get_adjacent_degree(graph, node, directed=False):
     """
     Get the adjacent degree of a node in a graph.
@@ -193,6 +194,7 @@ def get_adjacent_degree(graph, node, directed=False):
         "outgoing": outgoing_degree
     }
 
+
 def get_has_edge(graph, source, target):
     """
     Get the weight of an edge in a graph.
@@ -206,6 +208,116 @@ def get_has_edge(graph, source, target):
     - weight: The weight of the edge.
     """
     return graph.has_edge(source, target)
+
+
+def get_shortest_path(graph, source, target):
+    """
+    Get the shortest path between two nodes in a graph.
+
+    Parameters:
+    - graph: The NetworkX graph.
+    - source: The source node.
+    - target: The target node.
+
+    Returns:
+    - path: The shortest path between the nodes.
+    """
+    result = {
+        "path": None,
+        "shortest_path_length": None,
+        "message": "No path found!"
+    }
+    try:
+        result['path'] = nx.shortest_path(
+            graph, source, target, weight='weight')
+        result['shortest_path_length'] = nx.shortest_path_length(
+            graph, source=source, target=target, weight='weight')
+        result['message'] = "Shortest path found successfully!"
+    except nx.exception.NetworkXNoPath as e:
+        result['message'] = "No path found! Error: " + str(e)
+    return result
+
+
+def get_eccentricity_node(graph, node):
+    """
+    Get the eccentricity of a node in a graph.
+
+    Parameters:
+    - graph: The NetworkX graph.
+    - node: The node to get the eccentricity.
+
+    Returns:
+    - eccentricity: The eccentricity of the node.
+    """
+    try:
+        result = nx.eccentricity(graph, v=node)
+    except nx.exception.NetworkXError as e:
+        result = "Error in Graph: " + str(e)
+
+    return result
+
+
+def is_eulerian(graph):
+    """
+    Check if a graph is Eulerian.
+
+    Parameters:
+    - graph: The NetworkX graph.
+
+    Returns:
+    - is_eulerian: True if the graph is Eulerian, False otherwise.
+    """
+    return nx.is_eulerian(graph)
+
+
+def is_semi_eulerian(graph):
+    """
+    Check if a graph is semi-Eulerian.
+
+    Parameters:
+    - graph: The NetworkX graph.
+
+    Returns:
+    - is_semi_eulerian: True if the graph is semi-Eulerian, False otherwise.
+    """
+    return nx.is_semieulerian(graph)
+
+
+def get_radius(graph):
+    """
+    Get the radius of a graph.
+
+    Parameters:
+    - graph: The NetworkX graph.
+
+    Returns:
+    - radius: The radius of the graph.
+    """
+    try:
+        result = nx.radius(graph)
+    except nx.exception.NetworkXError as e:
+        result = "Error in Graph: " + str(e)
+
+    return result
+
+
+def get_diameter(graph):
+    """
+    Get the diameter of a graph.
+
+    Parameters:
+    - graph: The NetworkX graph.
+
+    Returns:
+    - diameter: The diameter of the graph.
+    """
+    try:
+        result = nx.diameter(graph)
+    except nx.exception.NetworkXError as e:
+        result = "Error in Graph: " + str(e)
+
+    return result
+
 
 def generate_image_from_graph(graph, directed, filename='graph.png'):
     """
