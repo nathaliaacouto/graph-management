@@ -41,7 +41,7 @@ Funcionalidades:
             - como a sequência de vértices deste menor caminho entre eles (0,5 pts). [DONE]
         (Pode-se considerar que os pesos das arestas são sempre números positivos (não há arestas com pesos negativos)).
     - Dado um vértice retornar qual a excentricidade do vértice [DONE]
-    - Dado um vértice retornar se o vértice é pendente ou não. [DOING]
+    - Dado um vértice retornar se o vértice é pendente ou não. [DONE]
     - Dado um grafo retornar o Raio e o Diâmetro do Grafo. [DONE]
     - Requisito surpresa [DONE]
         - Dado um grafo o sistema deverá informar se o grafo é euleriano ou não [DONE]

@@ -5,10 +5,26 @@ from src.db.database import engine, Base, get_db
 from src.models.graphs import Graph
 from src.dao.graphs import GraphRepository
 from sqlalchemy.orm import Session
+from fastapi.middleware.cors import CORSMiddleware
 
 Base.metadata.create_all(bind=engine)
 
 app = FastAPI()
+
+origins = [
+    "http://localhost.tiangolo.com",
+    "https://localhost.tiangolo.com",
+    "http://localhost",
+    "http://localhost:3000",
+]
+
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=origins,
+    allow_credentials=True,
+    allow_methods=["*"],
+    allow_headers=["*"],
+)
 
 
 @app.get("/")
@@ -36,6 +52,12 @@ def get_graph_api(id: int, db: Session = Depends(get_db)):
     if graph is not None:
         return {"message": "Graph found successfully!", "graph": graph.graph}
     return {"message": "Graph not found!"}
+
+
+@app.get("/get-graphs/")
+def get_graphs_api(db: Session = Depends(get_db)):
+    graphs = GraphRepository.find_all(db)
+    return {"message": "Graphs found successfully!", "graphs": [graph.id for graph in graphs]}
 
 
 @app.put("/add-edge/")
@@ -186,6 +208,17 @@ def get_diameter_api(id: int, db: Session = Depends(get_db)):
     if graph is not None:
         graph_object = functions.convert_json_to_graph(graph.graph)
         return {"message": "Diameter retrieved successfully!", "diameter": functions.get_diameter(graph_object)}
+    return {"message": "Graph not found!"}
+
+
+@app.get('/is-node-pendent/')
+def is_node_pendent_api(id: int, node: str = Form(...), db: Session = Depends(get_db)):
+    graph = GraphRepository.find_by_id(db, id)
+    if graph is not None:
+        graph_object = functions.convert_json_to_graph(graph.graph)
+        if functions.exists_node(graph_object, node):
+            return {"message": "Node pendent retrieved successfully!", "is_node_pendent": functions.get_pendent_node(graph_object, node)}
+        return {"message": "Node not found!"}
     return {"message": "Graph not found!"}
 
 

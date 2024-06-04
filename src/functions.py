@@ -318,6 +318,22 @@ def get_diameter(graph):
 
     return result
 
+def get_pendent_node(graph, node):
+    """
+    Get the pendent nodes of a node in a graph.
+
+    Parameters:
+    - graph: The NetworkX graph.
+    - node: The node to get the pendent nodes.
+
+    Returns:
+    - pendent_nodes: The pendent nodes of the node.
+    """
+    if(graph.degree(node) == 1):
+        return True
+    else:
+        return False
+
 
 def generate_image_from_graph(graph, directed, filename='graph.png'):
     """
