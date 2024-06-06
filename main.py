@@ -138,8 +138,10 @@ def get_has_edge_api(id: int, source: str = Form(...), target: str = Form(...), 
     if graph is not None:
         graph_object = functions.convert_json_to_graph(graph.graph)
         if functions.exists_node(graph_object, source) and functions.exists_node(graph_object, target):
-            return {"message": "Edge found successfully!", "exists": functions.get_has_edge(graph_object, source, target)}
-        return {"message": "Some node not found!"}
+            if functions.get_has_edge(graph_object, source, target):
+                return {"message": "The edge's exists!", "results": functions.get_has_edge(graph_object, source, target)}
+            return {"message": "The edge's aren't neighbors!", "results": functions.get_has_edge(graph_object, source, target)}
+        return {"message": "One of the edge's don't exist in the graph!"}
     return {"message": "Graph not found!"}
 
 
