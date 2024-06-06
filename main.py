@@ -202,6 +202,15 @@ def get_radius_api(id: int, db: Session = Depends(get_db)):
     return {"message": "Graph not found!"}
 
 
+@app.get("/get-size/")
+def get_size_api(id: int, db: Session = Depends(get_db)):
+    graph = GraphRepository.find_by_id(db, id)
+    if graph is not None:
+        graph_object = functions.convert_json_to_graph(graph.graph)
+        return {"message": "Size retrieved successfully!", "size": graph_object.size()}
+    return {"message": "Graph not found!"}
+
+
 @app.get("/get-diameter/")
 def get_diameter_api(id: int, db: Session = Depends(get_db)):
     graph = GraphRepository.find_by_id(db, id)

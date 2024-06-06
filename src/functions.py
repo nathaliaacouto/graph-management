@@ -282,6 +282,17 @@ def is_semi_eulerian(graph):
     """
     return nx.is_semieulerian(graph)
 
+def get_size(graph):
+    """
+    Get the size of a graph.
+
+    Parameters:
+    - graph: The NetworkX graph.
+
+    Returns:
+    - size: The size of the graph.
+    """
+    return graph.size()
 
 def get_radius(graph):
     """
